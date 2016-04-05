@@ -14,6 +14,10 @@ resource "aws_s3_bucket" "default" {
   acl    = "public-read"
   policy = "${template_file.policy.rendered}"
 
+  logging {
+    target_bucket = "${aws_s3_bucket.logs.bucket}"
+  }
+
   website {
     index_document = "index.html"
   }
@@ -25,4 +29,8 @@ resource "template_file" "policy" {
   vars {
     bucket = "${var.bucket}"
   }
+}
+
+resource "aws_s3_bucket" "logs" {
+  bucket = "${var.bucket}-logs"
 }
