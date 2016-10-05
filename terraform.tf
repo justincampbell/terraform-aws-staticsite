@@ -34,4 +34,3 @@ data "template_file" "policy" {
     bucket = "${var.bucket}"
   }
 }
-
