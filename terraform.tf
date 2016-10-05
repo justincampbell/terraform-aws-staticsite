@@ -12,7 +12,7 @@ resource "dnsimple_record" "default" {
 resource "aws_s3_bucket" "default" {
   bucket = "${var.bucket}"
   acl    = "public-read"
-  policy = "${template_file.policy.rendered}"
+  policy = "${data.template_file.policy.rendered}"
 
   logging {
     target_bucket = "${aws_s3_bucket.logs.bucket}"
@@ -23,7 +23,11 @@ resource "aws_s3_bucket" "default" {
   }
 }
 
-resource "template_file" "policy" {
+resource "aws_s3_bucket" "logs" {
+  bucket = "${var.bucket}-logs"
+}
+
+data "template_file" "policy" {
   template = "${file("${path.module}/policy.json")}"
 
   vars {
@@ -31,6 +35,3 @@ resource "template_file" "policy" {
   }
 }
 
-resource "aws_s3_bucket" "logs" {
-  bucket = "${var.bucket}-logs"
-}
