@@ -25,6 +25,7 @@ resource "aws_s3_bucket" "default" {
 
 resource "aws_s3_bucket" "logs" {
   bucket = "${var.bucket}-logs"
+  acl    = "log-delivery-write"
 }
 
 data "template_file" "policy" {
