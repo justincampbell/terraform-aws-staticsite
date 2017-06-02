@@ -12,7 +12,6 @@ resource "dnsimple_record" "default" {
 resource "aws_s3_bucket" "default" {
   bucket = "${var.bucket}"
   acl    = "public-read"
-  policy = "${data.template_file.policy.rendered}"
 
   logging {
     target_bucket = "${aws_s3_bucket.logs.bucket}"
@@ -23,15 +22,25 @@ resource "aws_s3_bucket" "default" {
   }
 }
 
+resource "aws_s3_bucket_policy" "default" {
+  bucket = "${aws_s3_bucket.default.id}"
+  policy = "${data.aws_iam_policy_document.default.json}"
+}
+
+data "aws_iam_policy_document" "default" {
+  statement {
+    actions = ["s3:GetObject"]
+
+    resources = ["${aws_s3_bucket.default.arn}/*"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+  }
+}
+
 resource "aws_s3_bucket" "logs" {
   bucket = "${var.bucket}-logs"
   acl    = "log-delivery-write"
-}
-
-data "template_file" "policy" {
-  template = "${file("${path.module}/policy.json")}"
-
-  vars {
-    bucket = "${var.bucket}"
-  }
 }
