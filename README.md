@@ -1,8 +1,8 @@
-# terraform-s3-website
+# terraform-aws-staticsite
 
 ```terraform
-module "terraform-s3-website" {
-  source = "github.com/justincampbell/terraform-s3-website"
+module "staticsite" {
+  source = "github.com/justincampbell/terraform-aws-staticsite"
 
   bucket = "coolstuff.mydomain.com"
   domain = "mydomain.com"
