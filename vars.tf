@@ -12,5 +12,6 @@ variable "error_document" {
 }
 
 variable "region" {
-  default = "us-east-1"
+  description = "The AWS region."
+  default     = "us-east-1"
 }
