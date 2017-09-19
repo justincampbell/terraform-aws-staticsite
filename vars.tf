@@ -6,6 +6,11 @@ variable "domain" {
   description = "Your domain name."
 }
 
+variable "error_document" {
+  description = "Path for a page to return on 404 and other errors."
+  default     = "error.html"
+}
+
 variable "region" {
   default = "us-east-1"
 }
