@@ -15,3 +15,12 @@ variable "region" {
   description = "The AWS region."
   default     = "us-east-1"
 }
+
+variable "enable_route53_custom_domain" {
+  description = "Boolean for whether to create an alias in route53 for bucket."
+  default     = false
+}
+
+variable "route53_zone" {
+  description = "AWS Route53 zone name for custom domain name for bucket."
+}

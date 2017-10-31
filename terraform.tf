@@ -1,10 +1,12 @@
 provider "aws" {
   region = "${var.region}"
+  alias  = "this"
 }
 
 resource "aws_s3_bucket" "default" {
-  bucket = "${var.bucket}"
-  acl    = "public-read"
+  provider = "aws.this"
+  bucket   = "${var.bucket}"
+  acl      = "public-read"
 
   logging {
     target_bucket = "${aws_s3_bucket.logs.bucket}"
@@ -17,8 +19,9 @@ resource "aws_s3_bucket" "default" {
 }
 
 resource "aws_s3_bucket_policy" "default" {
-  bucket = "${aws_s3_bucket.default.id}"
-  policy = "${data.aws_iam_policy_document.default.json}"
+  provider = "aws.this"
+  bucket   = "${aws_s3_bucket.default.id}"
+  policy   = "${data.aws_iam_policy_document.default.json}"
 }
 
 data "aws_iam_policy_document" "default" {
@@ -35,6 +38,27 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_s3_bucket" "logs" {
-  bucket = "${var.bucket}-logs"
-  acl    = "log-delivery-write"
+  provider = "aws.this"
+  bucket   = "${var.bucket}-logs"
+  acl      = "log-delivery-write"
+}
+
+data "aws_route53_zone" "z" {
+  provider = "aws.this"
+  count    = "${var.enable_route53_custom_domain ? 1 : 0}"
+  name     = "${var.route53_zone}"
+}
+
+resource "aws_route53_record" "r" {
+  provider = "aws.this"
+  count    = "${var.enable_route53_custom_domain ? 1 : 0}"
+  zone_id  = "${data.aws_route53_zone.z.zone_id}"
+  name     = "${aws_s3_bucket.default.id}"
+  type     = "A"
+
+  alias {
+    name                   = "${aws_s3_bucket.default.website_domain}"
+    zone_id                = "${aws_s3_bucket.default.hosted_zone_id}"
+    evaluate_target_health = false
+  }
 }
