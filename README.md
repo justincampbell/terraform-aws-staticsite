@@ -13,7 +13,22 @@ module "staticsite" {
   source = "github.com/justincampbell/terraform-aws-staticsite"
 
   bucket = "www.${local.domain}"
-  domain = "${local.domain}"
+}
+```
+
+You can also create an alias in AWS Route53 for your static website
+by including a route53_zone.
+
+```terraform
+locals {
+  domain = "example.com"
+}
+
+module "staticsite" {
+  source = "github.com/justincampbell/terraform-aws-staticsite"
+
+  bucket       = "www.${local.domain}"
+  route53_zone = "${local.domain}"
 }
 ```
 
@@ -50,7 +65,6 @@ module "staticsite" {
   source = "github.com/justincampbell/terraform-aws-staticsite"
 
   bucket = "${local.domain}"
-  domain = "${local.domain}"
 }
 
 resource "dnsimple_record" "apex" {
