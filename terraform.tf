@@ -45,13 +45,13 @@ resource "aws_s3_bucket" "logs" {
 
 data "aws_route53_zone" "z" {
   provider = "aws.this"
-  count    = "${var.enable_route53_custom_domain ? 1 : 0}"
+  count    = "${var.route53_zone != "0" ? 1 : 0}"
   name     = "${var.route53_zone}"
 }
 
 resource "aws_route53_record" "r" {
   provider = "aws.this"
-  count    = "${var.enable_route53_custom_domain ? 1 : 0}"
+  count    = "${var.route53_zone != "0" ? 1 : 0}"
   zone_id  = "${data.aws_route53_zone.z.zone_id}"
   name     = "${aws_s3_bucket.default.id}"
   type     = "A"
