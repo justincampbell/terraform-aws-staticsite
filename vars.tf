@@ -15,3 +15,8 @@ variable "region" {
   description = "The AWS region."
   default     = "us-east-1"
 }
+
+variable "force_destroy" {
+  description = "If true will allow non-empty buckets to be destroyed."
+  default     = false
+}
