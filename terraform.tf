@@ -3,8 +3,9 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "default" {
-  bucket = "${var.bucket}"
-  acl    = "public-read"
+  bucket        = "${var.bucket}"
+  acl           = "public-read"
+  force_destroy = "${var.force_destroy}"
 
   logging {
     target_bucket = "${aws_s3_bucket.logs.bucket}"
@@ -35,6 +36,7 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_s3_bucket" "logs" {
-  bucket = "${var.bucket}-logs"
-  acl    = "log-delivery-write"
+  bucket        = "${var.bucket}-logs"
+  acl           = "log-delivery-write"
+  force_destroy = "${var.force_destroy}"
 }
