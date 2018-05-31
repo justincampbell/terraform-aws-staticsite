@@ -20,3 +20,8 @@ variable "index_document" {
   description = "Use a different index document"
   default     = "index.html"
 }
+
+variable "force_destroy" {
+  description = "If true will allow non-empty buckets to be destroyed."
+  default     = false
+}
